@@ -17,3 +17,6 @@ trade:
   platform:
     security:
       secret: ${SECRET}
+
+via-cep:
+    url: "https://viacep.com.br/ws/"

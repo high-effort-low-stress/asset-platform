@@ -5,6 +5,7 @@ import com.github.hels.tradeplatform.onboarding.docs.InactiveUserApi;
 import com.github.hels.tradeplatform.onboarding.docs.UpdateUserApi;
 import com.github.hels.tradeplatform.onboarding.dto.CreateUserDto;
 import com.github.hels.tradeplatform.onboarding.dto.UpdateUserDto;
+import com.github.hels.tradeplatform.onboarding.mappers.UserMapper;
 import com.github.hels.tradeplatform.onboarding.models.User;
 import com.github.hels.tradeplatform.onboarding.repository.IUserRepository;
 import com.github.hels.tradeplatform.onboarding.service.CreateUserService;
@@ -15,7 +16,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -28,21 +28,14 @@ public class UserController {
     private final IUserRepository iUserRepository;
     private final InactiveUserService inactiveUserService;
     private final UpdateUserService updateUserService;
+    private final UserMapper userMapper;
 
     @PostMapping
     @CreateUserApi
     public CreateUserDto.Response createUser(
             @Valid @RequestBody CreateUserDto.Request requestBody
     ) {
-        String name = requestBody.getName();
-        String document = requestBody.getDocument();
-        String email = requestBody.getEmail();
-        String password = requestBody.getPassword();
-        String phoneNumber = requestBody.getPhoneNumber();
-        LocalDate birthDate = requestBody.getBirthDate();
-
-        User user = createUserService.execute(name, document, email, password, phoneNumber, birthDate);
-
+        User user = createUserService.execute(userMapper.toUserDto(requestBody));
         return new CreateUserDto.Response(user.getId().toString());
     }
 
@@ -63,10 +56,10 @@ public class UserController {
 
     @UpdateUserApi
     @PatchMapping("/{id}")
-    public UpdateUserDto.Response patchUser (
+    public UpdateUserDto.Response patchUser(
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserDto.Request requestBody
-            ) {
+    ) {
         String email = requestBody.getEmail();
         String phoneNumber = requestBody.getPhoneNumber();
 

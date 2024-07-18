@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,4 +32,7 @@ public class User {
     private LocalDate birthDate;
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Address> addresses;
+
 }

@@ -43,6 +43,8 @@ public class CreateUserDto {
         @NotNull(message = "You must provide your birth date.")
         private LocalDate birthDate;
 
+        @NotNull(message = "Address cannot be null")
+        private CreateAddressDto address;
     }
 
     @ToString
